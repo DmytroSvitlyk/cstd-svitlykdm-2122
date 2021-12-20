@@ -2,7 +2,7 @@ This repository was created for laboratory work from "Computer Systems Design Th
 Purpose: create a game using PSoC programming tools.
 
 My task number is 16, so I have such requirements for the work:
-  Hardware Interface: UART;
+  Hardware Interface: I2C;
   Game: tic-tac-toe game;
   Data Driven Format: XML;
   
