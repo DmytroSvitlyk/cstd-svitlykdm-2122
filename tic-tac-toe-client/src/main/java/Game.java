@@ -107,10 +107,15 @@ public class Game implements AutoCloseable{
         System.out.println();
     }
 
+    public ServerConnector getConnector() {
+        return S;
+    }
 
     @Override
     public void close() throws SerialPortException {
         S.closeConnector();
         QUIT = true;
     }
+
+
 }

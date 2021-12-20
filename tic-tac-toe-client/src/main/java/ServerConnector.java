@@ -28,9 +28,10 @@ public class ServerConnector {
         return PACKAGE.getPlayer();
     }
 
-    public void setCell(byte row, byte column) throws SerialPortException {
+    public void setCell(byte row, byte column, byte player) throws SerialPortException {
         PACKAGE.setCommand(Constants.CMD_SET_CELL);
         PACKAGE.setCell(row, column);
+        PACKAGE.setPlayer(player);
         PORT.writeBytes(PACKAGE.getPackage());
     }
 
@@ -44,6 +45,14 @@ public class ServerConnector {
 
     public Package getPackage() {
         return PACKAGE;
+    }
+
+    public SerialPort getPort() {
+        return PORT;
+    }
+
+    public boolean portIsOpened() {
+        return PORT.isOpened();
     }
 
     public void closeConnector() throws SerialPortException {
