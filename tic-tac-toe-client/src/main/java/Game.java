@@ -72,7 +72,7 @@ public class Game implements AutoCloseable{
                     System.out.println("Enter row and column separated by space");
                     x = sc.nextByte();
                     y = sc.nextByte();
-                    if(!makeMove(x, y)) {
+                    if(!makeMove(x, y, currentPlayer)) {
                         System.out.println("Move does not saved, enter correct data");
                     }
                     else {
@@ -85,7 +85,7 @@ public class Game implements AutoCloseable{
         }
     }
 
-    public boolean makeMove(byte x, byte y) throws SerialPortException {
+    public boolean makeMove(byte x, byte y, byte player) throws SerialPortException {
         if((x < 0 || x >= Constants.FIELD_SIZE) || (y < 0 || y >= Constants.FIELD_SIZE)) {
             return false;
         }
@@ -93,7 +93,7 @@ public class Game implements AutoCloseable{
         if(cell != Constants.EMPTY) {
             return false;
         }
-        S.setCell(x, y);
+        S.setCell(x, y, player);
         return true;
     }
 
