@@ -42,6 +42,23 @@ public class ServerConnector {
         return PACKAGE.getPlayer();
     }
 
+    public void loadField(byte[][] field) throws SerialPortException {
+        for (byte i = 0; i < Constants.FIELD_SIZE; i++) {
+            for (byte j = 0; j < Constants.FIELD_SIZE; j++) {
+                setCell(i, j, field[i][j]);
+            }
+        }
+    }
+
+    public byte[][] saveField() throws SerialPortException {
+        byte[][] f = new byte[Constants.FIELD_SIZE][Constants.FIELD_SIZE];
+        for (byte i = 0; i < Constants.FIELD_SIZE; i++) {
+            for (byte j = 0; j < Constants.FIELD_SIZE; j++) {
+                f[i][j] = getCell(i, j);
+            }
+        }
+        return f;
+    }
 
     public Package getPackage() {
         return PACKAGE;
@@ -58,6 +75,5 @@ public class ServerConnector {
     public void closeConnector() throws SerialPortException {
         PORT.closePort();
     }
-
 
 }

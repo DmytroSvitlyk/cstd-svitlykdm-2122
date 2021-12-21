@@ -6,8 +6,8 @@
 #define PACKET_CMD_POS 1
 #define PACKET_D0_POS 2
 #define PACKET_D1_POS 3
-#define PACKET_D2_POS 4
-#define PACKET_D3_POS 5
+#define PACKET_D2_POS 5
+#define PACKET_D3_POS 4
 #define PACKET_EOP_POS 6
 
 #define PACKET_SOP 0xFC
@@ -24,6 +24,7 @@
 #define EMPTY 0
 #define X 1
 #define O 2
+#define DRAW 3
 
 char FIELD[FIELD_SIZE][FIELD_SIZE]
 
@@ -66,8 +67,22 @@ char check_win() {
 		(FIELD[0][0] == O && FIELD[1][1] == O && FIELD[2][2] == O) || 
 		(FIELD[0][2] == O && FIELD[1][1] == O && FIELD[2][0] == O)) {
 			return O;
-		}	
-	return EMPTY
+		}
+	if(!check_moves()) {
+	    return DRAW;
+	}
+	return EMPTY;
+}
+
+bool check_moves() {
+    for (int i = 0; i < FIELD_SIZE; i++) {
+        for (int j = 0; j < FIELD_SIZE; j++) {
+            if(FIELD[i][j] == EMPTY) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 int main()
