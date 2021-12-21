@@ -1,5 +1,8 @@
 import jssc.SerialPortException;
 
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
+
 public class GameTest {
 
     private static Game game;
@@ -13,10 +16,12 @@ public class GameTest {
             closingGameShouldClosePort();
         } catch (SerialPortException e) {
             System.out.println(e.getPortName() + " " + e.getMethodName() + " " + e.getExceptionType());
+        } catch (XMLStreamException | IOException e) {
+            e.printStackTrace();
         }
     }
 
-    private static void startingGameShouldOpenPort() throws SerialPortException {
+    private static void startingGameShouldOpenPort() throws SerialPortException, XMLStreamException, IOException {
         game.start();
         assert game.getConnector().portIsOpened();
     }
