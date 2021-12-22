@@ -22,6 +22,8 @@ public interface Constants {
     byte CMD_GET_CELL = 1;
     byte CMD_SET_CELL = 2;
     byte CMD_CHECK_WIN = 3;
+    byte CMD_MAKE_RANDOM_MOVE = 4;
+    byte CMD_MAKE_WIN_MOVE = 5;
 
     byte MAN_VS_MAN_MODE = 0;
     byte MAN_VS_AI_MODE = 1;

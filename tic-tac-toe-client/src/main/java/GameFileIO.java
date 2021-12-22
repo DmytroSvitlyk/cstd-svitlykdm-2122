@@ -27,6 +27,15 @@ public class GameFileIO {
         out.writeStartElement("gameMode");
         out.writeCharacters(String.valueOf(save.getGameMode()));
         out.writeEndElement();
+        if(save.getGameMode() == Constants.MAN_VS_AI_MODE) {
+            out.writeStartElement("aiMode");
+            out.writeCharacters(String.valueOf(save.getAiMode()));
+            out.writeEndElement();
+            out.writeStartElement("playerSymbol");
+            out.writeCharacters(String.valueOf(save.getPlayerSymbol()));
+            out.writeEndElement();
+        }
+
         out.writeStartElement("field");
         for (int i = 0; i < Constants.FIELD_SIZE; i++) {
             out.writeStartElement("row");
@@ -43,16 +52,20 @@ public class GameFileIO {
         out.writeEndElement();
         out.writeEndDocument();
         out.close();
+        outputStream.close();
     }
 
-    public static GameSave loadGame(String fileName) throws FileNotFoundException, XMLStreamException {
+    public static GameSave loadGame(String fileName) throws IOException, XMLStreamException {
         GameSave save = new GameSave();
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        XMLStreamReader reader = inputFactory.createXMLStreamReader(new FileInputStream(fileName));
+        FileInputStream ins = new FileInputStream(fileName);
+        XMLStreamReader reader = inputFactory.createXMLStreamReader(ins);
         int event = reader.getEventType();
         boolean currentPlayerTag = false;
         boolean columnTag = false;
         boolean gameModeTag = false;
+        boolean aiModeTag = false;
+        boolean playerSymbolTag = false;
         int row = 0, column = 0;
         while (true) {
             switch (event) {
@@ -66,6 +79,10 @@ public class GameFileIO {
                         columnTag = true;
                     } else if(reader.getLocalName().equals("column")) {
                         gameModeTag = true;
+                    } else if(reader.getLocalName().equals("aiMode")) {
+                        aiModeTag = true;
+                    } else if(reader.getLocalName().equals("playerSymbol")) {
+                        playerSymbolTag = true;
                     }
                     break;
                 case XMLStreamConstants.CHARACTERS:
@@ -81,6 +98,14 @@ public class GameFileIO {
                         save.setGameMode(Byte.parseByte(reader.getText()));
                         gameModeTag = false;
                     }
+                    else if(aiModeTag) {
+                        save.setGameMode(Byte.parseByte(reader.getText()));
+                        aiModeTag = false;
+                    }
+                    else if(playerSymbolTag) {
+                        save.setGameMode(Byte.parseByte(reader.getText()));
+                        playerSymbolTag = false;
+                    }
                     break;
             }
             if(!reader.hasNext()) {
@@ -88,6 +113,8 @@ public class GameFileIO {
             }
             event = reader.next();
         }
+        reader.close();
+        ins.close();
         return save;
     }
 
