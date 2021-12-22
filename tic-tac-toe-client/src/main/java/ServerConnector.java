@@ -76,4 +76,15 @@ public class ServerConnector {
         PORT.closePort();
     }
 
+    public void makeRandomMove(byte player) throws SerialPortException {
+        PACKAGE.setCommand(Constants.CMD_MAKE_RANDOM_MOVE);
+        PACKAGE.setPlayer(player);
+        PORT.writeBytes(PACKAGE.getPackage());
+    }
+
+    public void makeBestMove(byte player) throws SerialPortException {
+        PACKAGE.setCommand(Constants.CMD_MAKE_WIN_MOVE);
+        PACKAGE.setPlayer(player);
+        PORT.writeBytes(PACKAGE.getPackage());
+    }
 }

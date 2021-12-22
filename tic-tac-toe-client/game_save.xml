@@ -1,7 +1,9 @@
 <?xml version="1.0" ?>
 <game>
     <currentPlayer>X</currentPlayer>
-    <gameMode>0</gameMode>
+    <gameMode>1</gameMode>
+    <aiMode>0</aiMode>
+    <playerSymbol>1</playerSymbol>
     <field>
         <row n="0">
             <column n="0">X</column>
