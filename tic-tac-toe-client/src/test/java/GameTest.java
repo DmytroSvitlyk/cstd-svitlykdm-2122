@@ -2,6 +2,7 @@ import jssc.SerialPortException;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class GameTest {
 
@@ -16,17 +17,17 @@ public class GameTest {
             closingGameShouldClosePort();
         } catch (SerialPortException e) {
             System.out.println(e.getPortName() + " " + e.getMethodName() + " " + e.getExceptionType());
-        } catch (XMLStreamException | IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private static void startingGameShouldOpenPort() throws SerialPortException, XMLStreamException, IOException {
+    private static void startingGameShouldOpenPort() throws SerialPortException, XMLStreamException, IOException, SQLException {
         game.start();
         assert game.getConnector().portIsOpened();
     }
 
-    private static void closingGameShouldClosePort() throws SerialPortException {
+    private static void closingGameShouldClosePort() throws Exception {
         game.close();
         assert !game.getConnector().portIsOpened();
     }

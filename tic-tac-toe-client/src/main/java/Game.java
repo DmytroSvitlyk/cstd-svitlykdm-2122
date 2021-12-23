@@ -2,6 +2,7 @@ import jssc.SerialPortException;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Game implements AutoCloseable{
@@ -12,12 +13,13 @@ public class Game implements AutoCloseable{
     final Scanner sc = new Scanner(System.in);
     final ServerConnector S;
     GameSave save = new GameSave();
+    DBConnector connector = new DBConnector();
 
-    public Game(String comm) throws SerialPortException {
+    public Game(String comm) throws SerialPortException, SQLException, ClassNotFoundException {
         this.S = new ServerConnector(comm);
     }
 
-    public void start() throws SerialPortException, XMLStreamException, IOException {
+    public void start() throws SerialPortException, XMLStreamException, IOException, SQLException {
         while(!QUIT) {
             save.reset();
             LOAD = false;
@@ -41,7 +43,7 @@ public class Game implements AutoCloseable{
         }
     }
 
-    public void startNewGame() throws SerialPortException, XMLStreamException, IOException {
+    public void startNewGame() throws SerialPortException, XMLStreamException, IOException, SQLException {
         System.out.println("CHOOSE GAME MODE");
         System.out.println("1) MAN vs MAN");
         System.out.println("2) MAN vs AI (random)");
@@ -63,9 +65,9 @@ public class Game implements AutoCloseable{
 
     }
 
-    public void loadGame() throws XMLStreamException, IOException, SerialPortException {
+    public void loadGame() throws XMLStreamException, IOException, SerialPortException, SQLException {
         LOAD = true;
-        save = GameFileIO.loadGame(Constants.SAVE_FILE);
+        save = connector.readGameSave();
         if(save.isInvalidSave()) {
             System.out.println("Some options in save is unset, Save is corrupted");
         }
@@ -82,8 +84,9 @@ public class Game implements AutoCloseable{
         }
     }
 
-    public void startManVSAIGame(byte aiMode) throws SerialPortException, XMLStreamException, IOException {
+    public void startManVSAIGame(byte aiMode) throws SerialPortException, XMLStreamException, IOException, SQLException {
         QUIT = false;
+        S.initField();
         byte player, ai, currentPlayer = Constants.PLAYER_X, winner, x, y;
         if(LOAD) {
             player = save.getPlayerSymbol();
@@ -145,7 +148,7 @@ public class Game implements AutoCloseable{
                         save.setGameMode(Constants.MAN_VS_AI_MODE);
                         save.setAiMode(aiMode);
                         save.setPlayerSymbol(player);
-                        GameFileIO.saveGame(save, Constants.SAVE_FILE);
+                        connector.writeGameSave(save);
                         System.out.println("GAME SAVED. EXITING...");
                         return;
                     case 3:
@@ -156,7 +159,7 @@ public class Game implements AutoCloseable{
         }
     }
 
-    public void startManVSManGame() throws SerialPortException, XMLStreamException, IOException {
+    public void startManVSManGame() throws SerialPortException, XMLStreamException, IOException, SQLException {
         byte currentPlayer;
         S.initField();
         QUIT = false;
@@ -205,7 +208,7 @@ public class Game implements AutoCloseable{
                     save.setCurrentPlayer(currentPlayer);
                     save.setField(S.saveField());
                     save.setGameMode(Constants.MAN_VS_MAN_MODE);
-                    GameFileIO.saveGame(save, Constants.SAVE_FILE);
+                    connector.writeGameSave(save);
                     System.out.println("GAME SAVED. EXITING...");
                     return;
                 case 3:
@@ -242,8 +245,9 @@ public class Game implements AutoCloseable{
     }
 
     @Override
-    public void close() throws SerialPortException {
+    public void close() throws Exception {
         S.closeConnector();
+        connector.close();
         QUIT = true;
     }
 

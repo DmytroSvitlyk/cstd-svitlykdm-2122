@@ -124,6 +124,7 @@ int main()
                         break;
 					case CMD_INIT_FIELD:
 						init_default_field();
+						break;
 					case CMD_MAKE_RANDOM_MOVE:
 					    char player = i2cWriteBuffer[PACKET_D0_POS];
 					    char opponent = player == X ? O : X;
@@ -265,7 +266,7 @@ Move findBestMove(char player, char opponent)
             if (board[i][j]==EMPTY)
             {
                 board[i][j] = player;
-                int moveVal = minimax(board, 0, false);
+                int moveVal = minimax(0, false, player, opponent);
                 board[i][j] = EMPTY;
                 if (moveVal > bestVal)
                 {
